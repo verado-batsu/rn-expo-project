@@ -44,7 +44,7 @@ const FormWrapper = styled(View)`
     padding: 0 16px;
 `;
 const TextCenter = styled(Text)`
-    margin-bottom: 33px;
+    margin-bottom: 32px;
     font-size: 30px;
     font-family: 'Roboto-bold';
     text-align: center;
@@ -54,15 +54,16 @@ const TextCenter = styled(Text)`
 
 const Input = styled(TextInput)`
     height: 50px;
-    background-color: #f6f6f6;
-    margin-bottom: 16px;
     padding: 16px;
-    &:last-child {
-        /* margin-bottom: 43px; */
-    }
+    margin-bottom: 16px;
+
+    background-color: #f6f6f6;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
 `;
 
 const RegisterButton = styled(Pressable)`
+    margin-top: 43px;
     margin-bottom: 16px;
     padding: 16px;
     background-color: #ff6c00;
@@ -107,14 +108,26 @@ export function RegistrationScreen() {
                         <Image source={AddIcon} />
                     </AddAvatarBtn>
                 </PhotoBox>
+
                 <FormWrapper>
                     <TextCenter>Реєстрація</TextCenter>
-                    <Input placeholder="Логін" />
-                    <Input placeholder="Адреса електронної пошти" />
-                    <Input placeholder="Пароль" />
+
+                    <Input placeholderTextColor="#BDBDBD" placeholder="Логін" />
+
+                    <Input
+                        placeholderTextColor="#BDBDBD"
+                        placeholder="Адреса електронної пошти"
+                    />
+
+                    <Input
+                        placeholderTextColor="#BDBDBD"
+                        placeholder="Пароль"
+                    />
+
                     <RegisterButton onPress={() => Alert.alert('Register')}>
                         <RegisterButtonText>Зареєструватись</RegisterButtonText>
                     </RegisterButton>
+
                     <Pressable onPress={() => Alert.alert('LogIn')}>
                         <LoginNavigateButtonText>
                             Вже є обліковий запис? Увійти
