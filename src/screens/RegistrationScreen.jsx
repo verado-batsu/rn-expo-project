@@ -1,16 +1,17 @@
 import styled from '@emotion/native';
-import { useFonts } from 'expo-font';
 import {
     Alert,
     Image,
+    KeyboardAvoidingView,
     Pressable,
     StyleSheet,
     Text,
-    TextInput,
     View,
 } from 'react-native';
 
-import AddIcon from '../images/RegistartionScreen/add.png';
+import AddIcon from '../assets/images/RegistartionScreen/add.png';
+import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
+import { useState } from 'react';
 
 const Container = styled(View)`
     position: relative;
@@ -46,24 +47,14 @@ const FormWrapper = styled(View)`
 const TextCenter = styled(Text)`
     margin-bottom: 32px;
     font-size: 30px;
-    font-family: 'Roboto-bold';
+    font-family: 'Roboto-Bold';
     text-align: center;
-    letter-spacing: ${0.01 * 30};
-    line-height: ${35 / 30};
-`;
-
-const Input = styled(TextInput)`
-    height: 50px;
-    padding: 16px;
-    margin-bottom: 16px;
-
-    background-color: #f6f6f6;
-    border: 1px solid #e8e8e8;
-    border-radius: 8px;
+    line-height: 35px;
+    color: #212121;
 `;
 
 const RegisterButton = styled(Pressable)`
-    margin-top: 43px;
+    margin-top: ${43 - 16 + 'px'};
     margin-bottom: 16px;
     padding: 16px;
     background-color: #ff6c00;
@@ -71,34 +62,42 @@ const RegisterButton = styled(Pressable)`
 `;
 
 const RegisterButtonText = styled(Text)`
-    font-family: 'Roboto-regular';
+    font-family: 'Roboto-Regular';
     text-align: center;
     color: #ffffff;
     font-size: 16px;
-    line-height: ${19 / 16};
+    line-height: 19px;
 `;
 
 const LoginNavigateButtonText = styled(Text)`
-    font-family: 'Roboto-regular';
+    font-family: 'Roboto-Regular';
     color: #1b4371;
     text-align: center;
     font-size: 16px;
-    line-height: ${19 / 16};
+    line-height: 19px;
 `;
 
 export function RegistrationScreen() {
-    const [fontsLoaded] = useFonts({
-        'Roboto-bold': require('../assets/fonts/roboto/Roboto-Bold.ttf'),
-        'Roboto-regular': require('../assets/fonts/roboto/Roboto-Regular.ttf'),
-        'Roboto-medium': require('../assets/fonts/roboto/Roboto-Medium.ttf'),
+    const [user, setUser] = useState({
+        login: '',
+        email: '',
+        password: '',
     });
 
-    const { pusher } = styles;
-
-    if (!fontsLoaded) {
-        return null;
+    function makeUser(typeOfUserInfo, userInfo) {
+        setUser(prevUser => {
+            return {
+                ...prevUser,
+                [typeOfUserInfo]: userInfo,
+            };
+        });
     }
 
+    function signUp() {
+        console.log(user);
+    }
+
+    const { pusher } = styles;
     return (
         <>
             <View style={pusher} />
@@ -110,29 +109,50 @@ export function RegistrationScreen() {
                 </PhotoBox>
 
                 <FormWrapper>
-                    <TextCenter>Реєстрація</TextCenter>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    >
+                        <TextCenter
+                            style={{
+                                letterSpacing: 0.01 * 30,
+                            }}
+                        >
+                            Реєстрація
+                        </TextCenter>
 
-                    <Input placeholderTextColor="#BDBDBD" placeholder="Логін" />
+                        <PrimaryInput
+                            placeholderTextColor="#BDBDBD"
+                            placeholder="Логін"
+                            name="login"
+                            makeUser={makeUser}
+                        />
 
-                    <Input
-                        placeholderTextColor="#BDBDBD"
-                        placeholder="Адреса електронної пошти"
-                    />
+                        <PrimaryInput
+                            placeholderTextColor="#BDBDBD"
+                            placeholder="Адреса електронної пошти"
+                            name="email"
+                            makeUser={makeUser}
+                        />
 
-                    <Input
-                        placeholderTextColor="#BDBDBD"
-                        placeholder="Пароль"
-                    />
+                        <PrimaryInput
+                            placeholderTextColor="#BDBDBD"
+                            placeholder="Пароль"
+                            name="password"
+                            makeUser={makeUser}
+                        />
 
-                    <RegisterButton onPress={() => Alert.alert('Register')}>
-                        <RegisterButtonText>Зареєструватись</RegisterButtonText>
-                    </RegisterButton>
+                        <RegisterButton onPress={signUp}>
+                            <RegisterButtonText>
+                                Зареєструватись
+                            </RegisterButtonText>
+                        </RegisterButton>
 
-                    <Pressable onPress={() => Alert.alert('LogIn')}>
-                        <LoginNavigateButtonText>
-                            Вже є обліковий запис? Увійти
-                        </LoginNavigateButtonText>
-                    </Pressable>
+                        <Pressable onPress={() => Alert.alert('LogIn')}>
+                            <LoginNavigateButtonText>
+                                Вже є обліковий запис? Увійти
+                            </LoginNavigateButtonText>
+                        </Pressable>
+                    </KeyboardAvoidingView>
                 </FormWrapper>
             </Container>
         </>

@@ -1,14 +1,7 @@
 import styled from '@emotion/native';
-import { useFonts } from 'expo-font';
-import {
-    Alert,
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-} from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
+import { useState } from 'react';
 
 const Container = styled(View)`
     position: relative;
@@ -26,24 +19,14 @@ const FormWrapper = styled(View)`
 const TextCenter = styled(Text)`
     margin-bottom: 32px;
     font-size: 30px;
-    font-family: 'Roboto-bold';
+    font-family: 'Roboto-Bold';
     text-align: center;
-    letter-spacing: ${0.01 * 30};
-    line-height: ${35 / 30};
-`;
-
-const Input = styled(TextInput)`
-    height: 50px;
-    padding: 16px;
-    margin-bottom: 16px;
-
-    background-color: #f6f6f6;
-    border: 1px solid #e8e8e8;
-    border-radius: 8px;
+    line-height: 35px;
+    color: #212121;
 `;
 
 const LogInButton = styled(Pressable)`
-    margin-top: 43px;
+    margin-top: ${43 - 16 + 'px'};
     margin-bottom: 16px;
     padding: 16px;
     background-color: #ff6c00;
@@ -51,52 +34,71 @@ const LogInButton = styled(Pressable)`
 `;
 
 const LogInButtonText = styled(Text)`
-    font-family: 'Roboto-regular';
+    font-family: 'Roboto-Regular';
     text-align: center;
     color: #ffffff;
     font-size: 16px;
-    line-height: ${19 / 16};
+    line-height: 19px;
 `;
 
 const SignInNavigateButtonText = styled(Text)`
-    font-family: 'Roboto-regular';
+    font-family: 'Roboto-Regular';
     color: #1b4371;
     text-align: center;
     font-size: 16px;
-    line-height: ${19 / 16};
+    line-height: 19px;
 `;
 
 export function LoginScreen() {
-    const [fontsLoaded] = useFonts({
-        'Roboto-bold': require('../assets/fonts/roboto/Roboto-Bold.ttf'),
-        'Roboto-regular': require('../assets/fonts/roboto/Roboto-Regular.ttf'),
-        'Roboto-medium': require('../assets/fonts/roboto/Roboto-Medium.ttf'),
+    const [user, setUser] = useState({
+        email: '',
+        password: '',
     });
 
-    const { pusher } = styles;
-
-    if (!fontsLoaded) {
-        return null;
+    function makeUser(typeOfUserInfo, userInfo) {
+        setUser(prevUser => {
+            return {
+                ...prevUser,
+                [typeOfUserInfo]: userInfo,
+            };
+        });
     }
 
+    function logIn() {
+        console.log(user);
+    }
+
+    const { pusher } = styles;
     return (
         <>
             <View style={pusher} />
             <Container>
                 <FormWrapper>
-                    <TextCenter>Увійти</TextCenter>
+                    <TextCenter
+                        style={
+                            {
+                                // letterSpacing: 0.01 * 30,
+                            }
+                        }
+                    >
+                        Увійти
+                    </TextCenter>
 
-                    <Input
+                    <PrimaryInput
                         placeholderTextColor="#BDBDBD"
                         placeholder="Адреса електронної пошти"
+                        name="email"
+                        makeUser={makeUser}
                     />
 
-                    <Input
+                    <PrimaryInput
                         placeholderTextColor="#BDBDBD"
                         placeholder="Пароль"
+                        name="password"
+                        makeUser={makeUser}
                     />
 
-                    <LogInButton onPress={() => Alert.alert('LogIn')}>
+                    <LogInButton onPress={logIn}>
                         <LogInButtonText>Увійти</LogInButtonText>
                     </LogInButton>
 
