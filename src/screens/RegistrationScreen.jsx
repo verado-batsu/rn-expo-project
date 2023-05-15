@@ -12,6 +12,7 @@ import {
 import AddIcon from '../assets/images/RegistartionScreen/add.png';
 import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const Container = styled(View)`
     position: relative;
@@ -78,6 +79,7 @@ const LoginNavigateButtonText = styled(Text)`
 `;
 
 export function RegistrationScreen() {
+    const navigation = useNavigation();
     const [user, setUser] = useState({
         login: '',
         email: '',
@@ -147,7 +149,7 @@ export function RegistrationScreen() {
                             </RegisterButtonText>
                         </RegisterButton>
 
-                        <Pressable onPress={() => Alert.alert('LogIn')}>
+                        <Pressable onPress={() => navigation.navigate('Login')}>
                             <LoginNavigateButtonText>
                                 Вже є обліковий запис? Увійти
                             </LoginNavigateButtonText>

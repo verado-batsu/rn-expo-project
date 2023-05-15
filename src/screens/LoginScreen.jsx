@@ -1,7 +1,15 @@
 import styled from '@emotion/native';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+    Alert,
+    KeyboardAvoidingView,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
 import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const Container = styled(View)`
     position: relative;
@@ -50,6 +58,7 @@ const SignInNavigateButtonText = styled(Text)`
 `;
 
 export function LoginScreen() {
+    const navigation = useNavigation();
     const [user, setUser] = useState({
         email: '',
         password: '',
@@ -74,39 +83,45 @@ export function LoginScreen() {
             <View style={pusher} />
             <Container>
                 <FormWrapper>
-                    <TextCenter
-                        style={
-                            {
-                                // letterSpacing: 0.01 * 30,
-                            }
-                        }
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     >
-                        Увійти
-                    </TextCenter>
+                        <TextCenter
+                            style={
+                                {
+                                    // letterSpacing: 0.01 * 30,
+                                }
+                            }
+                        >
+                            Увійти
+                        </TextCenter>
 
-                    <PrimaryInput
-                        placeholderTextColor="#BDBDBD"
-                        placeholder="Адреса електронної пошти"
-                        name="email"
-                        makeUser={makeUser}
-                    />
+                        <PrimaryInput
+                            placeholderTextColor="#BDBDBD"
+                            placeholder="Адреса електронної пошти"
+                            name="email"
+                            makeUser={makeUser}
+                        />
 
-                    <PrimaryInput
-                        placeholderTextColor="#BDBDBD"
-                        placeholder="Пароль"
-                        name="password"
-                        makeUser={makeUser}
-                    />
+                        <PrimaryInput
+                            placeholderTextColor="#BDBDBD"
+                            placeholder="Пароль"
+                            name="password"
+                            makeUser={makeUser}
+                        />
 
-                    <LogInButton onPress={logIn}>
-                        <LogInButtonText>Увійти</LogInButtonText>
-                    </LogInButton>
+                        <LogInButton onPress={logIn}>
+                            <LogInButtonText>Увійти</LogInButtonText>
+                        </LogInButton>
 
-                    <Pressable onPress={() => Alert.alert('SignIn')}>
-                        <SignInNavigateButtonText>
-                            Немає облікового запису? Зареєструватись
-                        </SignInNavigateButtonText>
-                    </Pressable>
+                        <Pressable
+                            onPress={() => navigation.navigate('Registration')}
+                        >
+                            <SignInNavigateButtonText>
+                                Немає облікового запису? Зареєструватись
+                            </SignInNavigateButtonText>
+                        </Pressable>
+                    </KeyboardAvoidingView>
                 </FormWrapper>
             </Container>
         </>
