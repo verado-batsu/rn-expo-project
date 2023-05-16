@@ -1,15 +1,21 @@
 import styled from '@emotion/native';
 import {
-    Alert,
     KeyboardAvoidingView,
     Pressable,
     StyleSheet,
     Text,
     View,
+    TouchableWithoutFeedback,
+    Keyboard,
+    ImageBackground,
+    Dimensions,
 } from 'react-native';
-import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+
+import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
+
+import BackgroundPhoto from '../assets/images/bg.jpg';
 
 const Container = styled(View)`
     position: relative;
@@ -79,57 +85,79 @@ export function LoginScreen() {
 
     const { pusher } = styles;
     return (
-        <>
-            <View style={pusher} />
-            <Container>
-                <FormWrapper>
-                    <KeyboardAvoidingView
-                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    >
-                        <TextCenter
-                            style={
-                                {
-                                    // letterSpacing: 0.01 * 30,
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.container}>
+                <ImageBackground
+                    resizeMode="cover"
+                    source={BackgroundPhoto}
+                    style={styles.bgImage}
+                >
+                    <View style={pusher} />
+                    <Container>
+                        <FormWrapper>
+                            <KeyboardAvoidingView
+                                behavior={
+                                    Platform.OS === 'ios' ? 'padding' : 'height'
                                 }
-                            }
-                        >
-                            Увійти
-                        </TextCenter>
+                            >
+                                <TextCenter
+                                    style={
+                                        {
+                                            // letterSpacing: 0.01 * 30,
+                                        }
+                                    }
+                                >
+                                    Увійти
+                                </TextCenter>
 
-                        <PrimaryInput
-                            placeholderTextColor="#BDBDBD"
-                            placeholder="Адреса електронної пошти"
-                            name="email"
-                            makeUser={makeUser}
-                        />
+                                <PrimaryInput
+                                    placeholderTextColor="#BDBDBD"
+                                    placeholder="Адреса електронної пошти"
+                                    name="email"
+                                    makeUser={makeUser}
+                                />
 
-                        <PrimaryInput
-                            placeholderTextColor="#BDBDBD"
-                            placeholder="Пароль"
-                            name="password"
-                            makeUser={makeUser}
-                        />
+                                <PrimaryInput
+                                    placeholderTextColor="#BDBDBD"
+                                    placeholder="Пароль"
+                                    name="password"
+                                    makeUser={makeUser}
+                                />
 
-                        <LogInButton onPress={logIn}>
-                            <LogInButtonText>Увійти</LogInButtonText>
-                        </LogInButton>
+                                <LogInButton onPress={logIn}>
+                                    <LogInButtonText>Увійти</LogInButtonText>
+                                </LogInButton>
 
-                        <Pressable
-                            onPress={() => navigation.navigate('Registration')}
-                        >
-                            <SignInNavigateButtonText>
-                                Немає облікового запису? Зареєструватись
-                            </SignInNavigateButtonText>
-                        </Pressable>
-                    </KeyboardAvoidingView>
-                </FormWrapper>
-            </Container>
-        </>
+                                <Pressable
+                                    onPress={() =>
+                                        navigation.navigate('Registration')
+                                    }
+                                >
+                                    <SignInNavigateButtonText>
+                                        Немає облікового запису? Зареєструватись
+                                    </SignInNavigateButtonText>
+                                </Pressable>
+                            </KeyboardAvoidingView>
+                        </FormWrapper>
+                    </Container>
+                </ImageBackground>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
+
+const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     pusher: {
         flex: 1,
+    },
+    container: {
+        flex: 1,
+    },
+    bgImage: {
+        flex: 1,
+        width: window.width,
+        height: window.height,
     },
 });

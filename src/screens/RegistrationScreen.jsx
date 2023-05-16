@@ -7,12 +7,19 @@ import {
     StyleSheet,
     Text,
     View,
+    ImageBackground,
+    Dimensions,
+    TouchableWithoutFeedback,
+    Keyboard,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+
+import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 
 import AddIcon from '../assets/images/RegistartionScreen/add.png';
-import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
-import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+
+import BackgroundPhoto from '../assets/images/bg.jpg';
 
 const Container = styled(View)`
     position: relative;
@@ -101,68 +108,92 @@ export function RegistrationScreen() {
 
     const { pusher } = styles;
     return (
-        <>
-            <View style={pusher} />
-            <Container>
-                <PhotoBox>
-                    <AddAvatarBtn onPress={() => Alert.alert('Add avatar')}>
-                        <Image source={AddIcon} />
-                    </AddAvatarBtn>
-                </PhotoBox>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.container}>
+                <ImageBackground
+                    resizeMode="cover"
+                    source={BackgroundPhoto}
+                    style={styles.bgImage}
+                >
+                    <View style={pusher} />
+                    <Container>
+                        <PhotoBox>
+                            <AddAvatarBtn
+                                onPress={() => Alert.alert('Add avatar')}
+                            >
+                                <Image source={AddIcon} />
+                            </AddAvatarBtn>
+                        </PhotoBox>
 
-                <FormWrapper>
-                    <KeyboardAvoidingView
-                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    >
-                        <TextCenter
-                            style={{
-                                letterSpacing: 0.01 * 30,
-                            }}
-                        >
-                            Реєстрація
-                        </TextCenter>
+                        <FormWrapper>
+                            <KeyboardAvoidingView
+                                behavior={
+                                    Platform.OS === 'ios' ? 'padding' : 'height'
+                                }
+                            >
+                                <TextCenter
+                                    style={{
+                                        letterSpacing: 0.01 * 30,
+                                    }}
+                                >
+                                    Реєстрація
+                                </TextCenter>
 
-                        <PrimaryInput
-                            placeholderTextColor="#BDBDBD"
-                            placeholder="Логін"
-                            name="login"
-                            makeUser={makeUser}
-                        />
+                                <PrimaryInput
+                                    placeholderTextColor="#BDBDBD"
+                                    placeholder="Логін"
+                                    name="login"
+                                    makeUser={makeUser}
+                                />
 
-                        <PrimaryInput
-                            placeholderTextColor="#BDBDBD"
-                            placeholder="Адреса електронної пошти"
-                            name="email"
-                            makeUser={makeUser}
-                        />
+                                <PrimaryInput
+                                    placeholderTextColor="#BDBDBD"
+                                    placeholder="Адреса електронної пошти"
+                                    name="email"
+                                    makeUser={makeUser}
+                                />
 
-                        <PrimaryInput
-                            placeholderTextColor="#BDBDBD"
-                            placeholder="Пароль"
-                            name="password"
-                            makeUser={makeUser}
-                        />
+                                <PrimaryInput
+                                    placeholderTextColor="#BDBDBD"
+                                    placeholder="Пароль"
+                                    name="password"
+                                    makeUser={makeUser}
+                                />
 
-                        <RegisterButton onPress={signUp}>
-                            <RegisterButtonText>
-                                Зареєструватись
-                            </RegisterButtonText>
-                        </RegisterButton>
+                                <RegisterButton onPress={signUp}>
+                                    <RegisterButtonText>
+                                        Зареєструватись
+                                    </RegisterButtonText>
+                                </RegisterButton>
 
-                        <Pressable onPress={() => navigation.navigate('Login')}>
-                            <LoginNavigateButtonText>
-                                Вже є обліковий запис? Увійти
-                            </LoginNavigateButtonText>
-                        </Pressable>
-                    </KeyboardAvoidingView>
-                </FormWrapper>
-            </Container>
-        </>
+                                <Pressable
+                                    onPress={() => navigation.navigate('Login')}
+                                >
+                                    <LoginNavigateButtonText>
+                                        Вже є обліковий запис? Увійти
+                                    </LoginNavigateButtonText>
+                                </Pressable>
+                            </KeyboardAvoidingView>
+                        </FormWrapper>
+                    </Container>
+                </ImageBackground>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
+
+const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     pusher: {
         flex: 1,
+    },
+    container: {
+        flex: 1,
+    },
+    bgImage: {
+        flex: 1,
+        width: window.width,
+        height: window.height,
     },
 });
