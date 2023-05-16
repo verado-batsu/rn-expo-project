@@ -103,7 +103,7 @@ export function RegistrationScreen() {
     }
 
     function signUp() {
-        console.log(user);
+        navigation.navigate('Home', { user });
     }
 
     const { pusher } = styles;

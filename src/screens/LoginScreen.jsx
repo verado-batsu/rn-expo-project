@@ -80,7 +80,7 @@ export function LoginScreen() {
     }
 
     function logIn() {
-        console.log(user);
+        navigation.navigate('Home', { user });
     }
 
     const { pusher } = styles;
