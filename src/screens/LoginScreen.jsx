@@ -100,15 +100,7 @@ export function LoginScreen() {
                                     Platform.OS === 'ios' ? 'padding' : 'height'
                                 }
                             >
-                                <TextCenter
-                                    style={
-                                        {
-                                            // letterSpacing: 0.01 * 30,
-                                        }
-                                    }
-                                >
-                                    Увійти
-                                </TextCenter>
+                                <TextCenter>Увійти</TextCenter>
 
                                 <PrimaryInput
                                     placeholderTextColor="#BDBDBD"

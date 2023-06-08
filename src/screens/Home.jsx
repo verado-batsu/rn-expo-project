@@ -1,7 +1,7 @@
 import styled from '@emotion/native';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
+import { Text, Pressable } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 
 import { PostsScreen } from './PostsScreen';
@@ -11,6 +11,7 @@ import { ProfileScreen } from './ProfileScreen';
 const Tabs = createBottomTabNavigator();
 
 export function Home() {
+    const navigation = useNavigation();
     const {
         params: { user },
     } = useRoute();
@@ -28,6 +29,7 @@ export function Home() {
                     height: 71,
                     flexDirection: 'row',
                     justifyContent: 'center',
+                    gap: 5,
                     paddingTop: 9,
                     paddingBottom: 22,
                     paddingLeft: 82,
@@ -72,8 +74,13 @@ export function Home() {
                     title: 'Публікації',
                     headerTitleAlign: 'center',
                     headerRight: () => (
-                        <Feather name="log-out" size={24} color="black" />
+                        <Pressable onPress={() => navigation.navigate('Login')}>
+                            <Feather name="log-out" size={24} color="#BDBDBD" />
+                        </Pressable>
                     ),
+                    headerRightContainerStyle: {
+                        marginRight: 10,
+                    },
                 }}
             />
             <Tabs.Screen
@@ -82,7 +89,20 @@ export function Home() {
                 options={{
                     title: 'Створити публікацію',
                     headerTitleAlign: 'center',
-                    headerLeft: () => <Text>{'<-'}</Text>,
+                    headerLeft: () => (
+                        <Pressable
+                            onPress={() => navigation.navigate('PostsScreen')}
+                        >
+                            <AntDesign
+                                name="arrowleft"
+                                size={24}
+                                color="rgba(33, 33, 33, 0.8)"
+                            />
+                        </Pressable>
+                    ),
+                    headerLeftContainerStyle: {
+                        marginLeft: 16,
+                    },
                 }}
             />
             <Tabs.Screen
