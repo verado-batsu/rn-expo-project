@@ -87,6 +87,9 @@ export function Home() {
                 name="CreatePostsScreen"
                 component={CreatePostsScreen}
                 options={{
+                    tabBarStyle: {
+                        display: 'none',
+                    },
                     title: 'Створити публікацію',
                     headerTitleAlign: 'center',
                     headerLeft: () => (

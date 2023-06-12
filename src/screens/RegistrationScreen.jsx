@@ -13,11 +13,14 @@ import {
     Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+// import { Camera } from 'expo-camera';
+// import * as MediaLibrary from 'expo-media-library';
 
 import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 
 import AddIcon from '../assets/images/RegistartionScreen/add.png';
+import RemoveIcon from '../assets/images/RegistartionScreen/remove.png';
 
 import BackgroundPhoto from '../assets/images/bg.jpg';
 
@@ -47,6 +50,10 @@ const AddAvatarBtn = styled(Pressable)`
     bottom: 14px;
     width: 25px;
     height: 25px;
+`;
+
+const AddAvatarIcon = styled(Image)`
+    /* transform: rotate(45deg); */
 `;
 
 const FormWrapper = styled(View)`
@@ -87,11 +94,34 @@ const LoginNavigateButtonText = styled(Text)`
 
 export function RegistrationScreen() {
     const navigation = useNavigation();
+
+    const [hasPermission, setHasPermission] = useState(null);
+    const [cameraRef, setCameraRef] = useState(null);
+    // const [type, setType] = useState(Camera.Constants.Type.front);
+
     const [user, setUser] = useState({
         login: '',
         email: '',
         password: '',
     });
+
+    // async function AskPermission() {
+    //     if (!hasPermission) {
+    //         const { status } = await Camera.requestCameraPermissionsAsync();
+    //         await MediaLibrary.requestPermissionsAsync();
+    //         setHasPermission(status === 'granted');
+    //         return;
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     (async () => {
+    //         const { status } = await Camera.requestCameraPermissionsAsync();
+    //         await MediaLibrary.requestPermissionsAsync();
+
+    //         setHasPermission(status === 'granted');
+    //     })();
+    // }, []);
 
     function makeUser(typeOfUserInfo, userInfo) {
         setUser(prevUser => {
@@ -118,10 +148,13 @@ export function RegistrationScreen() {
                     <View style={pusher} />
                     <Container>
                         <PhotoBox>
+                            {/* <Camera type={type} ref={setCameraRef} /> */}
                             <AddAvatarBtn
-                                onPress={() => Alert.alert('Add avatar')}
+                                onPress={() => {
+                                    Alert.alert('add avatar');
+                                }}
                             >
-                                <Image source={AddIcon} />
+                                <AddAvatarIcon source={AddIcon} />
                             </AddAvatarBtn>
                         </PhotoBox>
 
