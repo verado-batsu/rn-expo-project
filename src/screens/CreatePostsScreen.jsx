@@ -169,7 +169,9 @@ export function CreatePostsScreen() {
     }
 
     function publishPost() {
-        navigation.navigate('PostsScreen', { photo, title, position });
+        navigation.navigate('PostsScreen', {
+            post: { photo, title, position },
+        });
     }
 
     function deletePost() {

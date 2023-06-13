@@ -13,9 +13,8 @@ import {
     Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
-// import { Camera } from 'expo-camera';
-// import * as MediaLibrary from 'expo-media-library';
+import { useState } from 'react';
+import * as ImagePicker from 'expo-image-picker';
 
 import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 
@@ -43,7 +42,11 @@ const PhotoBox = styled(View)`
     background-color: #f6f6f6;
     border-radius: 16px;
 `;
-
+const Photo = styled(Image)`
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+`;
 const AddAvatarBtn = styled(Pressable)`
     position: absolute;
     right: -12px;
@@ -95,33 +98,13 @@ const LoginNavigateButtonText = styled(Text)`
 export function RegistrationScreen() {
     const navigation = useNavigation();
 
-    const [hasPermission, setHasPermission] = useState(null);
-    const [cameraRef, setCameraRef] = useState(null);
-    // const [type, setType] = useState(Camera.Constants.Type.front);
+    const [image, setImage] = useState(null);
 
     const [user, setUser] = useState({
         login: '',
         email: '',
         password: '',
     });
-
-    // async function AskPermission() {
-    //     if (!hasPermission) {
-    //         const { status } = await Camera.requestCameraPermissionsAsync();
-    //         await MediaLibrary.requestPermissionsAsync();
-    //         setHasPermission(status === 'granted');
-    //         return;
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     (async () => {
-    //         const { status } = await Camera.requestCameraPermissionsAsync();
-    //         await MediaLibrary.requestPermissionsAsync();
-
-    //         setHasPermission(status === 'granted');
-    //     })();
-    // }, []);
 
     function makeUser(typeOfUserInfo, userInfo) {
         setUser(prevUser => {
@@ -133,7 +116,23 @@ export function RegistrationScreen() {
     }
 
     function signUp() {
-        navigation.navigate('Home', { user });
+        navigation.navigate('Home', { user: { ...user, avatar: image } });
+    }
+
+    async function pickImage() {
+        if (!image) {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+            if (!result.canceled) {
+                setImage(result.assets[0].uri);
+            }
+            return;
+        }
+        setImage(null);
     }
 
     const { pusher } = styles;
@@ -148,13 +147,11 @@ export function RegistrationScreen() {
                     <View style={pusher} />
                     <Container>
                         <PhotoBox>
-                            {/* <Camera type={type} ref={setCameraRef} /> */}
-                            <AddAvatarBtn
-                                onPress={() => {
-                                    Alert.alert('add avatar');
-                                }}
-                            >
-                                <AddAvatarIcon source={AddIcon} />
+                            {image && <Photo source={{ uri: image }} />}
+                            <AddAvatarBtn onPress={pickImage}>
+                                <AddAvatarIcon
+                                    source={!image ? AddIcon : RemoveIcon}
+                                />
                             </AddAvatarBtn>
                         </PhotoBox>
 
