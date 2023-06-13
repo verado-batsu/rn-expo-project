@@ -66,7 +66,7 @@ export const RegisterButton = styled(Pressable)`
 export const RegisterButtonText = styled(Text)`
     font-family: 'Roboto-Regular';
     text-align: center;
-    color:${props => {
+    color: ${props => {
         if (props.disabled) {
             return '#bdbdbd';
         }

@@ -8,7 +8,7 @@ import {
     ImageBackground,
     Dimensions,
 } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
@@ -30,6 +30,16 @@ export function LoginScreen() {
         email: '',
         password: '',
     });
+    const [isDisableBtn, setIsDisableBtn] = useState(true);
+
+    useEffect(() => {
+        const { email, password } = user;
+        if (email && password) {
+            setIsDisableBtn(false);
+        } else {
+            setIsDisableBtn(true);
+        }
+    }, [user]);
 
     function makeUser(typeOfUserInfo, userInfo) {
         setUser(prevUser => {
@@ -77,8 +87,13 @@ export function LoginScreen() {
                                     makeUser={makeUser}
                                 />
 
-                                <LogInButton onPress={logIn}>
-                                    <LogInButtonText>Увійти</LogInButtonText>
+                                <LogInButton
+                                    onPress={logIn}
+                                    disabled={isDisableBtn}
+                                >
+                                    <LogInButtonText disabled={isDisableBtn}>
+                                        Увійти
+                                    </LogInButtonText>
                                 </LogInButton>
 
                                 <Pressable

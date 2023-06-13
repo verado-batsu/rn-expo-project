@@ -31,14 +31,24 @@ export const LogInButton = styled(Pressable)`
     margin-top: ${43 - 16 + 'px'};
     margin-bottom: 16px;
     padding: 16px;
-    background-color: #ff6c00;
+    background-color: ${props => {
+        if (props.disabled) {
+            return '#f6f6f6';
+        }
+        return '#ff6c00';
+    }};
     border-radius: 100px;
 `;
 
 export const LogInButtonText = styled(Text)`
     font-family: 'Roboto-Regular';
     text-align: center;
-    color: #ffffff;
+    color: ${props => {
+        if (props.disabled) {
+            return '#bdbdbd';
+        }
+        return '#ffffff';
+    }};
     font-size: 16px;
     line-height: 19px;
 `;
