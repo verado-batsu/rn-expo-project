@@ -1,9 +1,7 @@
-import styled from '@emotion/native';
 import {
     KeyboardAvoidingView,
     Pressable,
     StyleSheet,
-    Text,
     View,
     TouchableWithoutFeedback,
     Keyboard,
@@ -17,51 +15,14 @@ import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 
 import BackgroundPhoto from '../assets/images/bg.jpg';
 
-const Container = styled(View)`
-    position: relative;
-    width: 100%;
-    height: 489px;
-    padding-top: 32px;
-    background-color: #ffffff;
-    border-top-right-radius: 25px;
-    border-top-left-radius: 25px;
-`;
-
-const FormWrapper = styled(View)`
-    padding: 0 16px;
-`;
-const TextCenter = styled(Text)`
-    margin-bottom: 32px;
-    font-size: 30px;
-    font-family: 'Roboto-Bold';
-    text-align: center;
-    line-height: 35px;
-    color: #212121;
-`;
-
-const LogInButton = styled(Pressable)`
-    margin-top: ${43 - 16 + 'px'};
-    margin-bottom: 16px;
-    padding: 16px;
-    background-color: #ff6c00;
-    border-radius: 100px;
-`;
-
-const LogInButtonText = styled(Text)`
-    font-family: 'Roboto-Regular';
-    text-align: center;
-    color: #ffffff;
-    font-size: 16px;
-    line-height: 19px;
-`;
-
-const SignInNavigateButtonText = styled(Text)`
-    font-family: 'Roboto-Regular';
-    color: #1b4371;
-    text-align: center;
-    font-size: 16px;
-    line-height: 19px;
-`;
+import {
+    Container,
+    FormWrapper,
+    TextCenter,
+    LogInButton,
+    LogInButtonText,
+    SignInNavigateButtonText,
+} from '../styled-components/LoginScreen.styled';
 
 export function LoginScreen() {
     const navigation = useNavigation();

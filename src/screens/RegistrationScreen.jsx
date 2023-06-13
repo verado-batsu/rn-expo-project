@@ -1,11 +1,8 @@
-import styled from '@emotion/native';
 import {
-    Alert,
     Image,
     KeyboardAvoidingView,
     Pressable,
     StyleSheet,
-    Text,
     View,
     ImageBackground,
     Dimensions,
@@ -13,7 +10,7 @@ import {
     Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 
 import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
@@ -23,77 +20,17 @@ import RemoveIcon from '../assets/images/RegistartionScreen/remove.png';
 
 import BackgroundPhoto from '../assets/images/bg.jpg';
 
-const Container = styled(View)`
-    position: relative;
-    width: 100%;
-    height: 549px;
-    padding-top: 92px;
-    background-color: #ffffff;
-    border-top-right-radius: 25px;
-    border-top-left-radius: 25px;
-`;
-const PhotoBox = styled(View)`
-    position: absolute;
-    top: -60px;
-    left: 50%;
-    transform: translateX(-60px);
-    height: 120px;
-    width: 120px;
-    background-color: #f6f6f6;
-    border-radius: 16px;
-`;
-const Photo = styled(Image)`
-    width: 100%;
-    height: 100%;
-    border-radius: 16px;
-`;
-const AddAvatarBtn = styled(Pressable)`
-    position: absolute;
-    right: -12px;
-    bottom: 14px;
-    width: 25px;
-    height: 25px;
-`;
-
-const AddAvatarIcon = styled(Image)`
-    /* transform: rotate(45deg); */
-`;
-
-const FormWrapper = styled(View)`
-    padding: 0 16px;
-`;
-const TextCenter = styled(Text)`
-    margin-bottom: 32px;
-    font-size: 30px;
-    font-family: 'Roboto-Bold';
-    text-align: center;
-    line-height: 35px;
-    color: #212121;
-`;
-
-const RegisterButton = styled(Pressable)`
-    margin-top: ${43 - 16 + 'px'};
-    margin-bottom: 16px;
-    padding: 16px;
-    background-color: #ff6c00;
-    border-radius: 100px;
-`;
-
-const RegisterButtonText = styled(Text)`
-    font-family: 'Roboto-Regular';
-    text-align: center;
-    color: #ffffff;
-    font-size: 16px;
-    line-height: 19px;
-`;
-
-const LoginNavigateButtonText = styled(Text)`
-    font-family: 'Roboto-Regular';
-    color: #1b4371;
-    text-align: center;
-    font-size: 16px;
-    line-height: 19px;
-`;
+import {
+    Container,
+    PhotoBox,
+    Photo,
+    AddAvatarBtn,
+    FormWrapper,
+    TextCenter,
+    RegisterButton,
+    RegisterButtonText,
+    LoginNavigateButtonText,
+} from '../styled-components/RegistrationScreen.styled';
 
 export function RegistrationScreen() {
     const navigation = useNavigation();
@@ -105,6 +42,16 @@ export function RegistrationScreen() {
         email: '',
         password: '',
     });
+    const [isDisableBtn, setIsDisableBtn] = useState(true);
+
+    useEffect(() => {
+        const { login, email, password } = user;
+        if (login && email && password) {
+            setIsDisableBtn(false);
+        } else {
+            setIsDisableBtn(true);
+        }
+    }, [user]);
 
     function makeUser(typeOfUserInfo, userInfo) {
         setUser(prevUser => {
@@ -149,9 +96,7 @@ export function RegistrationScreen() {
                         <PhotoBox>
                             {image && <Photo source={{ uri: image }} />}
                             <AddAvatarBtn onPress={pickImage}>
-                                <AddAvatarIcon
-                                    source={!image ? AddIcon : RemoveIcon}
-                                />
+                                <Image source={!image ? AddIcon : RemoveIcon} />
                             </AddAvatarBtn>
                         </PhotoBox>
 
@@ -190,8 +135,11 @@ export function RegistrationScreen() {
                                     makeUser={makeUser}
                                 />
 
-                                <RegisterButton onPress={signUp}>
-                                    <RegisterButtonText>
+                                <RegisterButton
+                                    onPress={signUp}
+                                    disabled={isDisableBtn}
+                                >
+                                    <RegisterButtonText disabled={isDisableBtn}>
                                         Зареєструватись
                                     </RegisterButtonText>
                                 </RegisterButton>
