@@ -51,7 +51,10 @@ export function LoginScreen() {
     }
 
     function logIn() {
-        navigation.navigate('Home', { user });
+        navigation.navigate('Home', {
+            screen: 'PostsScreen',
+            params: { user },
+        });
     }
 
     const { pusher } = styles;

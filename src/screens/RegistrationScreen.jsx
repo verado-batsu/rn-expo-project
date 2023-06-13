@@ -63,7 +63,12 @@ export function RegistrationScreen() {
     }
 
     function signUp() {
-        navigation.navigate('Home', { user: { ...user, avatar: image } });
+        navigation.navigate('Home', {
+            screen: 'PostsScreen',
+            params: {
+                user: { ...user, avatar: image },
+            },
+        });
     }
 
     async function pickImage() {
