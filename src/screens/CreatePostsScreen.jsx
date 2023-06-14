@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
+import * as ImagePicker from 'expo-image-picker';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -22,6 +23,8 @@ import {
     LoadPhotoText,
     InputWrapper,
     Input,
+    InputPosition,
+    MapPin,
     PublishBtn,
     PublishBtnText,
     RemoveBtn,
@@ -61,7 +64,19 @@ export function CreatePostsScreen() {
         setPhoto(null);
     }
 
-    function LoadOrChangePhoto() {
+    async function LoadOrChangePhoto() {
+        if (!photo) {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+            if (!result.canceled) {
+                setPhoto(result.assets[0]);
+            }
+            return;
+        }
         setPhoto(null);
     }
 
@@ -106,13 +121,16 @@ export function CreatePostsScreen() {
                     <KeyboardAvoidingView
                         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     >
-                        <Input
-                            placeholderTextColor="#BDBDBD"
-                            placeholder="Місцевість..."
-                            name="position"
-                            onChangeText={setPosition}
-                            value={position}
-                        />
+                        <View style={{ position: 'relative' }}>
+                            <MapPin name="map-pin" size={24} color="#BDBDBD" />
+                            <InputPosition
+                                placeholderTextColor="#BDBDBD"
+                                placeholder="Місцевість..."
+                                name="position"
+                                onChangeText={setPosition}
+                                value={position}
+                            />
+                        </View>
                     </KeyboardAvoidingView>
                 </InputWrapper>
                 <View style={{ flex: 1 }}>

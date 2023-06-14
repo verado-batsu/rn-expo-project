@@ -94,7 +94,9 @@ export function Home() {
                     headerTitleAlign: 'center',
                     headerLeft: () => (
                         <Pressable
-                            onPress={() => navigation.navigate('PostsScreen')}
+                            onPress={() =>
+                                navigation.navigate('PostsScreen', {})
+                            }
                         >
                             <AntDesign
                                 name="arrowleft"

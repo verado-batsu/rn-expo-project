@@ -8,6 +8,7 @@ import {
     TextInput,
 } from 'react-native';
 import { Camera } from 'expo-camera';
+import { Feather } from '@expo/vector-icons';
 
 export const MainContainer = styled(View)`
     flex: 1;
@@ -26,7 +27,6 @@ export const CameraStyled = styled(Camera)`
     margin-bottom: 8px;
 
     background-color: #f6f6f6;
-    border-radius: 10px;
 `;
 
 export const SnapBtn = styled(TouchableOpacity)`
@@ -83,6 +83,25 @@ export const Input = styled(TextInput)`
     border-style: solid;
     border-color: #e8e8e8;
 `;
+
+export const InputPosition = styled(TextInput)`
+	padding-left: 28px;
+
+	height: 50px;
+    font-family: 'Roboto-Regular';
+    font-size: 16px;
+    line-height: 19px;
+    color: #212121;
+
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-color: #e8e8e8;
+`
+export const MapPin = styled(Feather)`
+	position: absolute;
+	left: 0;
+	top: 13px;
+`
 
 export const PublishBtn = styled(Pressable)`
     padding: 16px 32px;
