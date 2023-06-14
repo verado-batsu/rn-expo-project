@@ -64,7 +64,7 @@ export function RegistrationScreen() {
 
     function signUp() {
         navigation.navigate('Home', {
-            screen: 'PostsScreen',
+            screen: 'DefaultScreen',
             params: {
                 user: { ...user, avatar: image },
             },

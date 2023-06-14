@@ -52,7 +52,7 @@ export function LoginScreen() {
 
     function logIn() {
         navigation.navigate('Home', {
-            screen: 'PostsScreen',
+            screen: 'DefaultScreen',
             params: { user },
         });
     }

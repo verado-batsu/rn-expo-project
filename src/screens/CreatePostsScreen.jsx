@@ -6,12 +6,11 @@ import {
     Keyboard,
 } from 'react-native';
 import { Camera } from 'expo-camera';
+import { useNavigation } from '@react-navigation/native';
+import { FontAwesome, Feather } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
-
-import { useNavigation } from '@react-navigation/native';
-
-import { FontAwesome, Feather } from '@expo/vector-icons';
+import * as Location from 'expo-location';
 
 import {
     MainContainer,
@@ -37,6 +36,7 @@ export function CreatePostsScreen() {
     const [photo, setPhoto] = useState(null);
     const [title, setTitle] = useState('');
     const [position, setPosition] = useState('');
+    const [location, setLocation] = useState(null);
     const [isDisableBtn, setIsDisableBtn] = useState(true);
 
     useEffect(() => {
@@ -51,6 +51,7 @@ export function CreatePostsScreen() {
         (async () => {
             await Camera.requestCameraPermissionsAsync();
             await MediaLibrary.requestPermissionsAsync();
+            await Location.requestForegroundPermissionsAsync();
         })();
     }, []);
 
@@ -80,9 +81,16 @@ export function CreatePostsScreen() {
         setPhoto(null);
     }
 
-    function publishPost() {
+    async function publishPost() {
+        let currLocation = await Location.getCurrentPositionAsync({});
+        await setLocation(currLocation);
         navigation.navigate('PostsScreen', {
-            post: { photo, title, position },
+            post: {
+                photo,
+                title,
+                position,
+                location: location.coords,
+            },
         });
     }
 

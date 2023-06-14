@@ -1,7 +1,7 @@
 import styled from '@emotion/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 
 import { PostsScreen } from './PostsScreen';
