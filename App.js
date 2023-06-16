@@ -5,12 +5,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useFonts } from 'expo-font';
 // import { StatusBar } from 'expo-status-bar';
 
-// !!! API key = AIzaSyCfewkkAkFer5ygS5HVJIAiWzRpRmSebfE
-
 import { RegistrationScreen } from './src/screens/RegistrationScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { Home } from './src/screens/Home';
-// import Test from './src/components/test/test'
 
 const MainStack = createStackNavigator();
 
@@ -46,6 +43,5 @@ export default function App() {
 					{/* <StatusBar style="auto" /> */}
 				</MainStack.Navigator>
 			</NavigationContainer>
-		// <Test/>
 	);
 }

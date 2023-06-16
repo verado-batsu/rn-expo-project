@@ -1,20 +1,10 @@
-import styled from '@emotion/native';
-import { Text, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import MapView, { Marker } from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
-const MapScreenContainer = styled(View)`
-    flex: 1;
-
-    border-top-width: 0.5px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.3);
-    background-color: #fff;
-`;
-
-const Map = styled(MapView)`
-    flex: 1;
-`;
+import {
+    MapScreenContainer,
+    Map,
+} from '../../styled-components/nestedScreenStyle/MapScreen.styled';
 
 export function MapScreen() {
     const {
