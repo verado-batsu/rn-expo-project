@@ -20,7 +20,6 @@ export function MapScreen() {
     const {
         params: { location },
     } = useRoute();
-    console.log(location);
     return (
         <MapScreenContainer>
             <Map
