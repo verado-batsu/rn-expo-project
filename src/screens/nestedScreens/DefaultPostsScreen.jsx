@@ -112,7 +112,6 @@ export function DefaultPostsScreen() {
 
     const [userInfo, setUserInfo] = useState(user || null);
     const [posts, setPosts] = useState([]);
-    console.log('posts:', posts);
 
     useEffect(() => {
         if (post) {
@@ -121,7 +120,16 @@ export function DefaultPostsScreen() {
     }, [post]);
 
     function openComments() {
-        // navigation.navigate();
+        navigation.navigate('CommentsScreen');
+    }
+
+    function openMap(location) {
+        navigation.navigate('MapScreen', {
+            location: {
+                latitude: location.latitude,
+                longitude: location.longitude,
+            },
+        });
     }
 
     return (
@@ -160,7 +168,11 @@ export function DefaultPostsScreen() {
                                     />
                                     <PostCommentsLabel>0</PostCommentsLabel>
                                 </PostCommentsBtn>
-                                <PostLocationBtn>
+                                <PostLocationBtn
+                                    onPress={() => {
+                                        openMap(item.location);
+                                    }}
+                                >
                                     <Feather
                                         name="map-pin"
                                         size={24}

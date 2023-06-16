@@ -1,4 +1,3 @@
-import styled from '@emotion/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Pressable } from 'react-native';
@@ -71,16 +70,7 @@ export function Home() {
                 name="PostsScreen"
                 component={PostsScreen}
                 options={{
-                    title: 'Публікації',
-                    headerTitleAlign: 'center',
-                    headerRight: () => (
-                        <Pressable onPress={() => navigation.navigate('Login')}>
-                            <Feather name="log-out" size={24} color="#BDBDBD" />
-                        </Pressable>
-                    ),
-                    headerRightContainerStyle: {
-                        marginRight: 10,
-                    },
+                    headerShown: false,
                 }}
             />
             <Tabs.Screen

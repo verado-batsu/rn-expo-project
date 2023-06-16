@@ -36,7 +36,6 @@ export function CreatePostsScreen() {
     const [photo, setPhoto] = useState(null);
     const [title, setTitle] = useState('');
     const [position, setPosition] = useState('');
-    const [location, setLocation] = useState(null);
     const [isDisableBtn, setIsDisableBtn] = useState(true);
 
     useEffect(() => {
@@ -83,13 +82,16 @@ export function CreatePostsScreen() {
 
     async function publishPost() {
         let currLocation = await Location.getCurrentPositionAsync({});
-        await setLocation(currLocation);
+
         navigation.navigate('PostsScreen', {
-            post: {
-                photo,
-                title,
-                position,
-                location: location.coords,
+            screen: 'DefaultPostsScreen',
+            params: {
+                post: {
+                    photo,
+                    title,
+                    position,
+                    location: currLocation.coords,
+                },
             },
         });
     }

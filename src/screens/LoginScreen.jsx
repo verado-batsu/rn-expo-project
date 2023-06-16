@@ -52,8 +52,11 @@ export function LoginScreen() {
 
     function logIn() {
         navigation.navigate('Home', {
-            screen: 'DefaultScreen',
-            params: { user },
+            screen: 'PostsScreen',
+            params: {
+                screen: 'DefaultPostsScreen',
+                params: { user },
+            },
         });
     }
 
