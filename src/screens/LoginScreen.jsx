@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { authSignInUser } from '../redux/auth/authOperations';
 
 import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 
@@ -25,7 +27,10 @@ import {
 } from '../styled-components/LoginScreen.styled';
 
 export function LoginScreen() {
+    const dispatch = useDispatch();
+
     const navigation = useNavigation();
+
     const [user, setUser] = useState({
         email: '',
         password: '',
@@ -51,6 +56,7 @@ export function LoginScreen() {
     }
 
     function logIn() {
+        dispatch(authSignInUser(user));
         navigation.navigate('Home', {
             screen: 'PostsScreen',
             params: {

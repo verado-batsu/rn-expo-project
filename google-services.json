@@ -1,0 +1,39 @@
+{
+    "project_info": {
+        "project_number": "460114632246",
+        "project_id": "rn-expo-project-72745",
+        "storage_bucket": "rn-expo-project-72745.appspot.com"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:460114632246:android:23f855d9924ff7226bc297",
+                "android_client_info": {
+                    "package_name": "rn.expo.project.ANDROID"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "460114632246-bgh1fm9uqrb0q3821t1rmbktoa6vmkt6.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBBZgdxZfyQFkFFOqo6rJDgmBAIOKHMLfY"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "460114632246-bgh1fm9uqrb0q3821t1rmbktoa6vmkt6.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}

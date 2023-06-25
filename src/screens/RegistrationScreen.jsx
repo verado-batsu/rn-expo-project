@@ -12,6 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import { useDispatch } from 'react-redux';
 
 import { PrimaryInput } from '../components/PrimaryInput/PrimaryInput';
 
@@ -31,8 +32,11 @@ import {
     RegisterButtonText,
     LoginNavigateButtonText,
 } from '../styled-components/RegistrationScreen.styled';
+import { authSignUpUser } from '../redux/auth/authOperations';
 
 export function RegistrationScreen() {
+    const dispatch = useDispatch();
+
     const navigation = useNavigation();
 
     const [image, setImage] = useState(null);
@@ -63,6 +67,7 @@ export function RegistrationScreen() {
     }
 
     function signUp() {
+        dispatch(authSignUpUser({ ...user, avatar: image }));
         navigation.navigate('Home', {
             screen: 'PostsScreen',
             params: {
