@@ -2,6 +2,7 @@ import { View, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
 
 import {
     MainContainer,
@@ -21,21 +22,22 @@ import {
     PostLocationLabel,
 } from '../../styled-components/nestedScreenStyle/PostsScreen.styled';
 
+import { selectUser } from '../../redux/selectors';
+
 export function DefaultPostsScreen() {
     const navigation = useNavigation();
 
-    const {
-        params: { user, post },
-    } = useRoute();
+    const userInfo = useSelector(selectUser);
 
-    const [userInfo, setUserInfo] = useState(user || null);
+    const params = useRoute()?.params;
+
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        if (post) {
-            setPosts(prev => [...prev, post]);
+        if (params?.post) {
+            setPosts(prev => [...prev, params.post]);
         }
-    }, [post]);
+    }, [params?.post]);
 
     function openComments() {
         navigation.navigate('CommentsScreen');

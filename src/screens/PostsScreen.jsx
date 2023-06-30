@@ -14,6 +14,11 @@ const NestedStack = createStackNavigator();
 export function PostsScreen() {
     const dispatch = useDispatch();
     const navigation = useNavigation();
+
+    function signOut() {
+        dispatch(authSignOutUser());
+        navigation.navigate('Login');
+    }
     return (
         <NestedStack.Navigator initialRouteName="DefaultScreen">
             <NestedStack.Screen
@@ -24,7 +29,7 @@ export function PostsScreen() {
                     headerTitleAlign: 'center',
                     headerLeft: () => {},
                     headerRight: () => (
-                        <Pressable onPress={() => dispatch(authSignOutUser)}>
+                        <Pressable onPress={signOut}>
                             <Feather name="log-out" size={24} color="#BDBDBD" />
                         </Pressable>
                     ),

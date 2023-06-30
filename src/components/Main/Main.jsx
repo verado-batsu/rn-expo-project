@@ -7,25 +7,16 @@ import { LoginScreen } from '../../screens/LoginScreen';
 import { Home } from '../../screens/Home';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../../redux/selectors';
-import { useEffect } from 'react';
-import { authStateCnangeUser } from '../../redux/auth/authOperations';
 
 const MainStack = createStackNavigator();
 
 export function Main() {
-    const dispatch = useDispatch();
-    const user = useSelector(selectUser);
+    const { isLoggedIn } = useSelector(selectUser);
 
-    useEffect(() => {
-        dispatch(authStateCnangeUser());
-    }, []);
-
-    console.log(user);
     return (
         <NavigationContainer>
             <MainStack.Navigator
-                // initialRouteName={!stateChange ? 'Login' : 'Home'}
-                initialRouteName="Login"
+                initialRouteName={!isLoggedIn ? 'Login' : 'Home'}
             >
                 <MainStack.Screen
                     name="Registration"

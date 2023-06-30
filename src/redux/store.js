@@ -13,6 +13,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { authReducer } from './auth/authSlice'
 
+// clearAsyncStorage = async() => {
+//     AsyncStorage.clear();
+// }
+
 const persistConfig = {
 	key: 'root',
 	storage: AsyncStorage,

@@ -11,9 +11,6 @@ const Tabs = createBottomTabNavigator();
 
 export function Home() {
     const navigation = useNavigation();
-    const {
-        params: { user },
-    } = useRoute();
 
     return (
         <Tabs.Navigator

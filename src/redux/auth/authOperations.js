@@ -7,7 +7,7 @@ import {
 } from 'firebase/auth';
 
 import { auth } from '../../../config'
-import { authStateChange, updateUserProfile } from './authSlice';
+import { authSignInState, authSignOutState } from './authSlice';
 
 export const authSignUpUser = ({email, password, login, avatar}) => async (dispatch, getState) => {
 	try {
@@ -21,7 +21,7 @@ export const authSignUpUser = ({email, password, login, avatar}) => async (dispa
 
 		const {uid, displayName} = await auth.currentUser;
 
-		dispatch(updateUserProfile({
+		dispatch(authSignInState({
 			userId: uid,
 			login: displayName,
 		}))
@@ -33,10 +33,13 @@ export const authSignUpUser = ({email, password, login, avatar}) => async (dispa
 
 export const authSignInUser = ({email, password}) => async (dispatch, getState) => {
 	try {
-		const user = await signInWithEmailAndPassword(auth, email, password)
-		dispatch(updateUserProfile({
-			userId: user.uid,
-			login: user.displayName,
+		await signInWithEmailAndPassword(auth, email, password)
+
+		const {uid, displayName} = await auth.currentUser;
+
+		dispatch(authSignInState({
+			userId: uid,
+			login: displayName,
 		}))
 	} catch (error) {
 		console.log(error)
@@ -47,24 +50,10 @@ export const authSignInUser = ({email, password}) => async (dispatch, getState) 
 export const authSignOutUser = () => async (dispatch, getState) => {
 	try {
 		await signOut(auth)
+		dispatch(authSignOutState())
 	} catch (error) {
 		console.log(error)
 		console.log(error.message)
 	}
 	
-}
-
-export const authStateCnangeUser = () => async (dispatch, getState) => {
-	await onAuthStateChanged(auth, (user) => {
-		if (user) {
-			dispatch(updateUserProfile({
-			userId: user.uid,
-			login: user.displayName,
-			}))
-			dispatch(authStateChange({stateChange: true}))
-		}
-		else {
-			console.log('User not found')
-		}
-	})
 }

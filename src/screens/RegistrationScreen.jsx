@@ -68,15 +68,13 @@ export function RegistrationScreen() {
 
     function signUp() {
         dispatch(authSignUpUser({ ...user, avatar: image }));
-        navigation.navigate('Home', {
-            screen: 'PostsScreen',
-            params: {
-                screen: 'DefaultPostsScreen',
-                params: {
-                    user: { ...user, avatar: image },
-                },
-            },
-        });
+        navigation.navigate('Home');
+        // navigation.navigate('Home', {
+        //     screen: 'PostsScreen',
+        //     params: {
+        //         screen: 'DefaultPostsScreen'
+        //     },
+        // });
     }
 
     async function pickImage() {
