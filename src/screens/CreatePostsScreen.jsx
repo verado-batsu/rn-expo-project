@@ -11,6 +11,13 @@ import { FontAwesome, Feather } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+import uuid from 'react-native-uuid';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { collection, addDoc } from 'firebase/firestore';
+import { useSelector } from 'react-redux';
+
+import { storage, db } from '../../config';
+import { selectUser } from '../redux/selectors';
 
 import {
     MainContainer,
@@ -31,6 +38,8 @@ import {
 
 export function CreatePostsScreen() {
     const navigation = useNavigation();
+
+    const { userId, login } = useSelector(selectUser);
 
     const [cameraRef, setCameraRef] = useState(null);
     const [photo, setPhoto] = useState(null);
@@ -81,19 +90,56 @@ export function CreatePostsScreen() {
     }
 
     async function publishPost() {
+        const photoUrl = await uploadPhotoToServer();
+
         let currLocation = await Location.getCurrentPositionAsync({});
+
+        const post = {
+            photo: photoUrl,
+            title,
+            position,
+            location: currLocation.coords,
+            userId,
+            login,
+        };
+
+        await uploadPostToServer(post);
 
         navigation.navigate('PostsScreen', {
             screen: 'DefaultPostsScreen',
             params: {
-                post: {
-                    photo,
-                    title,
-                    position,
-                    location: currLocation.coords,
-                },
+                post,
             },
         });
+    }
+
+    async function uploadPostToServer(post) {
+        try {
+            const docRef = await addDoc(collection(db, 'posts'), post);
+            console.log('Document written with ID: ', docRef.id);
+        } catch (error) {
+            console.error('Error adding document: ', error);
+            throw error;
+        }
+    }
+
+    async function uploadPhotoToServer() {
+        try {
+            const response = await fetch(photo.uri);
+            const file = await response.blob();
+
+            const postPhotoId = uuid.v4();
+
+            const storageRef = ref(storage, `postImages/${postPhotoId}`);
+
+            await uploadBytes(storageRef, file);
+
+            const photoUrl = await getDownloadURL(storageRef);
+
+            return photoUrl;
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function deletePost() {

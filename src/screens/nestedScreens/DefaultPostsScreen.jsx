@@ -77,7 +77,7 @@ export function DefaultPostsScreen() {
                 renderItem={({ item }) => {
                     return (
                         <PostContainer>
-                            <PostPhoto source={{ uri: item.photo.uri }} />
+                            <PostPhoto source={{ uri: item.photo }} />
                             <PostTitle>{item.title}</PostTitle>
                             <PostInfo>
                                 <PostCommentsBtn onPress={openComments}>
