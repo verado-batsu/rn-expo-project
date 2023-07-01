@@ -1,11 +1,11 @@
 // import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useSelector } from 'react-redux';
 
 import { RegistrationScreen } from '../../screens/RegistrationScreen';
 import { LoginScreen } from '../../screens/LoginScreen';
 import { Home } from '../../screens/Home';
-import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../../redux/selectors';
 
 const MainStack = createStackNavigator();

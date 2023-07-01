@@ -3,6 +3,9 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
+import { collection, getDocs } from 'firebase/firestore';
+
+import { db } from '../../../config';
 
 import {
     MainContainer,
@@ -34,13 +37,26 @@ export function DefaultPostsScreen() {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        if (params?.post) {
-            setPosts(prev => [...prev, params.post]);
-        }
-    }, [params?.post]);
+        getAllPosts();
+    }, [params]);
 
-    function openComments() {
-        navigation.navigate('CommentsScreen');
+    async function getAllPosts() {
+        try {
+            const snapshot = await getDocs(collection(db, 'posts'));
+            let newPost = [];
+            snapshot.forEach(doc => {
+                newPost = [...newPost, { id: doc.id, ...doc.data() }];
+            });
+            setPosts(newPost);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function openComments(photo) {
+        navigation.navigate('CommentsScreen', {
+            postsPhoto: photo,
+        });
     }
 
     function openMap(location) {
@@ -80,7 +96,11 @@ export function DefaultPostsScreen() {
                             <PostPhoto source={{ uri: item.photo }} />
                             <PostTitle>{item.title}</PostTitle>
                             <PostInfo>
-                                <PostCommentsBtn onPress={openComments}>
+                                <PostCommentsBtn
+                                    onPress={() => {
+                                        openComments(item.photo);
+                                    }}
+                                >
                                     <MessageCirle
                                         name="message-circle"
                                         size={24}

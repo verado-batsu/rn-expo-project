@@ -11,13 +11,13 @@ import { FontAwesome, Feather } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import uuid from 'react-native-uuid';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+
 import { collection, addDoc } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 
-import { storage, db } from '../../config';
+import { db } from '../../config';
 import { selectUser } from '../redux/selectors';
+import { uploadPhotoToServer } from '../redux/helpers/uploadPhotoToServer';
 
 import {
     MainContainer,
@@ -90,7 +90,7 @@ export function CreatePostsScreen() {
     }
 
     async function publishPost() {
-        const photoUrl = await uploadPhotoToServer();
+        const photoUrl = await uploadPhotoToServer(photo.uri);
 
         let currLocation = await Location.getCurrentPositionAsync({});
 
@@ -108,37 +108,17 @@ export function CreatePostsScreen() {
         navigation.navigate('PostsScreen', {
             screen: 'DefaultPostsScreen',
             params: {
-                post,
+                postIsPublish: true,
             },
         });
     }
 
     async function uploadPostToServer(post) {
         try {
-            const docRef = await addDoc(collection(db, 'posts'), post);
-            console.log('Document written with ID: ', docRef.id);
+            await addDoc(collection(db, 'posts'), post);
         } catch (error) {
             console.error('Error adding document: ', error);
             throw error;
-        }
-    }
-
-    async function uploadPhotoToServer() {
-        try {
-            const response = await fetch(photo.uri);
-            const file = await response.blob();
-
-            const postPhotoId = uuid.v4();
-
-            const storageRef = ref(storage, `postImages/${postPhotoId}`);
-
-            await uploadBytes(storageRef, file);
-
-            const photoUrl = await getDownloadURL(storageRef);
-
-            return photoUrl;
-        } catch (error) {
-            console.log(error);
         }
     }
 

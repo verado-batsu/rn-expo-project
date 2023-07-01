@@ -69,12 +69,6 @@ export function RegistrationScreen() {
     function signUp() {
         dispatch(authSignUpUser({ ...user, avatar: image }));
         navigation.navigate('Home');
-        // navigation.navigate('Home', {
-        //     screen: 'PostsScreen',
-        //     params: {
-        //         screen: 'DefaultPostsScreen'
-        //     },
-        // });
     }
 
     async function pickImage() {
@@ -93,14 +87,14 @@ export function RegistrationScreen() {
         setImage(null);
     }
 
-    const { pusher } = styles;
+    const { pusher, container, bgImage } = styles;
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.container}>
+            <View style={container}>
                 <ImageBackground
                     resizeMode="cover"
                     source={BackgroundPhoto}
-                    style={styles.bgImage}
+                    style={bgImage}
                 >
                     <View style={pusher} />
                     <Container>
