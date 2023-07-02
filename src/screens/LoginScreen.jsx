@@ -55,8 +55,9 @@ export function LoginScreen() {
         });
     }
 
-    function logIn() {
+    async function logIn() {
         dispatch(authSignInUser(user));
+
         navigation.navigate('Home', {
             screen: 'PostsScreen',
             params: {

@@ -7,21 +7,34 @@ import {
     StyleSheet,
     Image,
     Pressable,
+    Text,
 } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 import BackgroundPhoto from '../assets/images/bg.jpg';
 import AddIcon from '../assets/images/RegistartionScreen/add.png';
 import RemoveIcon from '../assets/images/RegistartionScreen/remove.png';
+import { Feather } from '@expo/vector-icons';
 
 import { selectUser } from '../redux/selectors';
-import { updateUserAvatar } from '../redux/auth/authOperations';
+import {
+    authSignOutUser,
+    updateUserAvatar,
+} from '../redux/auth/authOperations';
+import { db } from '../../config';
 
 export const ProfileContainer = styled(View)`
     position: relative;
     height: 500px;
+    padding-top: 92px;
+    padding-bottom: 46px;
+    padding-left: 16px;
+    padding-right: 16px;
+
     background-color: #ffffff;
     border-top-right-radius: 25px;
     border-top-left-radius: 25px;
@@ -31,7 +44,7 @@ export const PhotoBox = styled(View)`
     position: absolute;
     top: -60px;
     left: 50%;
-    transform: translateX(-60px);
+    transform: translateX(-44px);
     height: 120px;
     width: 120px;
     background-color: #f6f6f6;
@@ -50,12 +63,50 @@ export const AddAvatarBtn = styled(Pressable)`
     height: 25px;
 `;
 
+export const SignOutBtn = styled(Pressable)`
+    position: absolute;
+    top: 22px;
+    right: 16px;
+`;
+
+export const UserName = styled(Text)`
+    margin-bottom: 33px;
+
+    text-align: center;
+    font-family: 'Roboto-Medium';
+    font-size: 30px;
+    letter-spacing: 0.3px;
+`;
+
 export function ProfileScreen() {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     const userInfo = useSelector(selectUser);
 
+    const [userPosts, setUserPosts] = useState([]);
     const [image, setImage] = useState(userInfo.avatar || null);
+
+    useEffect(() => {
+        getUserPosts();
+    }, []);
+
+    async function getUserPosts() {
+        try {
+            const q = query(
+                collection(db, 'posts'),
+                where('userId', '==', userInfo.userId)
+            );
+            const snapshot = await getDocs(q);
+            let newPost = [];
+            snapshot.forEach(doc => {
+                newPost = [...newPost, { id: doc.id, ...doc.data() }];
+            });
+            setUserPosts(newPost);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     async function changeAvatar() {
         if (!image) {
@@ -74,6 +125,11 @@ export function ProfileScreen() {
         setImage(null);
     }
 
+    function signOut() {
+        dispatch(authSignOutUser());
+        navigation.navigate('Login');
+    }
+
     const { pusher, container, bgImage } = styles;
     return (
         <View style={container}>
@@ -90,6 +146,10 @@ export function ProfileScreen() {
                             <Image source={!image ? AddIcon : RemoveIcon} />
                         </AddAvatarBtn>
                     </PhotoBox>
+                    <SignOutBtn onPress={signOut}>
+                        <Feather name="log-out" size={24} color="#BDBDBD" />
+                    </SignOutBtn>
+                    <UserName>{userInfo.login}</UserName>
                 </ProfileContainer>
             </ImageBackground>
         </View>

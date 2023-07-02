@@ -1,7 +1,23 @@
 import styled from '@emotion/native';
 import { useRoute } from '@react-navigation/native';
-import { Text, View, Image, TextInput, Pressable } from 'react-native';
+import {
+    Text,
+    View,
+    Image,
+    TextInput,
+    Pressable,
+    SafeAreaView,
+    FlatList,
+} from 'react-native';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
+import moment from 'moment';
+
+import { db } from '../../../config';
+
 import { AntDesign } from '@expo/vector-icons';
+import { selectUser } from '../../redux/selectors';
 
 export const CommentsContainer = styled(View)`
     flex: 1;
@@ -18,6 +34,50 @@ export const PostPhoto = styled(Image)`
     width: 100%;
     height: 240px;
     border-radius: 8px;
+`;
+
+export const CommentContainer = styled(View)`
+    display: flex;
+    flex-direction: ${props => {
+        if (props.commentOwner === props.currentUser) {
+            return 'row-reverse';
+        } else {
+            return 'row';
+        }
+    }};
+    gap: 16px;
+    margin-bottom: 24px;
+`;
+export const AvatarPhoto = styled(Image)`
+    width: 28px;
+    height: 28px;
+    border-radius: 28px;
+`;
+
+export const CommentBox = styled(View)`
+    padding: 16px;
+    border-radius: ${props => {
+        if (props.commentOwner === props.currentUser) {
+            return '6px 0px 6px 6px';
+        } else {
+            return '0px 6px 6px 6px';
+        }
+    }};
+    background-color: rgba(0, 0, 0, 0.05);
+`;
+
+export const Comment = styled(Text)`
+    margin-bottom: 8px;
+
+    color: #212121;
+    font-family: 'Roboto-Regular';
+    font-size: 13px;
+    line-height: 18px;
+`;
+export const CommentDate = styled(Text)`
+    color: #bdbdbd;
+    font-family: 'Roboto-Regular';
+    font-size: 10px;
 `;
 
 export const CommentInput = styled(TextInput)`
@@ -48,22 +108,87 @@ const SendBtn = styled(Pressable)`
 `;
 
 export function CommentsScreen() {
+    const { userId, avatar } = useSelector(selectUser);
+
     const {
-        params: { postsPhoto },
+        params: { postsPhoto, postId },
     } = useRoute();
+
+    const [comment, setComment] = useState('');
+    const [allComments, setAllComments] = useState([]);
+
+    useEffect(() => {
+        getAllComments();
+    }, [comment]);
+
+    async function createComment() {
+        try {
+            if (comment) {
+                const date = moment().format('LL | h:mm');
+                await addDoc(collection(db, 'posts', postId, 'comments'), {
+                    comment,
+                    avatar,
+                    date,
+                    userId,
+                });
+                setComment('');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function getAllComments() {
+        try {
+            const snapshot = await getDocs(
+                collection(db, 'posts', postId, 'comments')
+            );
+            let newComments = [];
+            snapshot.forEach(doc => {
+                newComments = [...newComments, { id: doc.id, ...doc.data() }];
+            });
+            setAllComments(newComments);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <CommentsContainer>
             <PostPhoto source={{ uri: postsPhoto }} />
-            <View style={{ flex: 1 }}>
-                <Text>CommentsScreen</Text>
-            </View>
+            <SafeAreaView style={{ flex: 1, marginBottom: 10 }}>
+                <FlatList
+                    data={allComments}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <CommentContainer
+                            commentOwner={item.userId}
+                            currentUser={userId}
+                        >
+                            <AvatarPhoto source={{ uri: item.avatar }} />
+                            <CommentBox
+                                style={{
+                                    flexGrow: 1,
+                                    flex: 1,
+                                }}
+                                commentOwner={item.userId}
+                                currentUser={userId}
+                            >
+                                <Comment>{item.comment}</Comment>
+                                <CommentDate>{item.date}</CommentDate>
+                            </CommentBox>
+                        </CommentContainer>
+                    )}
+                />
+            </SafeAreaView>
             <View style={{ position: 'relative' }}>
                 <CommentInput
                     placeholder="Коментувати..."
                     placeholderTextColor="#BDBDBD"
+                    onChangeText={setComment}
+                    value={comment}
                 />
-                <SendBtn>
+                <SendBtn onPress={createComment}>
                     <AntDesign name="arrowup" size={20} color="#FFFFFF" />
                 </SendBtn>
             </View>

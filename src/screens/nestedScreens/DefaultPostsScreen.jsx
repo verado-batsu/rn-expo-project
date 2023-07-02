@@ -53,9 +53,10 @@ export function DefaultPostsScreen() {
         }
     }
 
-    function openComments(photo) {
+    function openComments(photo, postId) {
         navigation.navigate('CommentsScreen', {
             postsPhoto: photo,
+            postId,
         });
     }
 
@@ -89,7 +90,7 @@ export function DefaultPostsScreen() {
             </UserContainer>
             <FlatList
                 data={posts}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={item => item.id}
                 renderItem={({ item }) => {
                     return (
                         <PostContainer>
@@ -98,7 +99,7 @@ export function DefaultPostsScreen() {
                             <PostInfo>
                                 <PostCommentsBtn
                                     onPress={() => {
-                                        openComments(item.photo);
+                                        openComments(item.photo, item.id);
                                     }}
                                 >
                                     <MessageCirle
