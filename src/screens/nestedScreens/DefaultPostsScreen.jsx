@@ -1,9 +1,9 @@
 import { View, FlatList } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 import { db } from '../../../config';
 
@@ -32,22 +32,21 @@ export function DefaultPostsScreen() {
 
     const userInfo = useSelector(selectUser);
 
-    const params = useRoute()?.params;
-
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         getAllPosts();
-    }, [params]);
+    }, []);
 
     async function getAllPosts() {
         try {
-            const snapshot = await getDocs(collection(db, 'posts'));
-            let newPost = [];
-            snapshot.forEach(doc => {
-                newPost = [...newPost, { id: doc.id, ...doc.data() }];
+            await onSnapshot(collection(db, 'posts'), snapshot => {
+                let newPost = [];
+                snapshot.forEach(doc => {
+                    newPost = [...newPost, { id: doc.id, ...doc.data() }];
+                });
+                setPosts(newPost);
             });
-            setPosts(newPost);
         } catch (error) {
             console.log(error);
         }
@@ -107,7 +106,11 @@ export function DefaultPostsScreen() {
                                         size={24}
                                         color="#BDBDBD"
                                     />
-                                    <PostCommentsLabel>0</PostCommentsLabel>
+                                    <PostCommentsLabel>
+                                        {item.numberOfComments
+                                            ? item.numberOfComments
+                                            : '0'}
+                                    </PostCommentsLabel>
                                 </PostCommentsBtn>
                                 <PostLocationBtn
                                     onPress={() => {

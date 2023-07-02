@@ -8,12 +8,19 @@ import {
     Image,
     Pressable,
     Text,
+    FlatList,
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    onSnapshot,
+} from 'firebase/firestore';
 
 import BackgroundPhoto from '../assets/images/bg.jpg';
 import AddIcon from '../assets/images/RegistartionScreen/add.png';
@@ -31,7 +38,7 @@ export const ProfileContainer = styled(View)`
     position: relative;
     height: 500px;
     padding-top: 92px;
-    padding-bottom: 46px;
+    padding-bottom: 32px;
     padding-left: 16px;
     padding-right: 16px;
 
@@ -78,6 +85,59 @@ export const UserName = styled(Text)`
     letter-spacing: 0.3px;
 `;
 
+export const PostContainer = styled(View)`
+    margin-bottom: 32px;
+`;
+
+export const PostPhoto = styled(Image)`
+    margin-bottom: 8px;
+    width: 100%;
+    height: 240px;
+    border-radius: 8px;
+`;
+
+export const PostTitle = styled(Text)`
+    margin-bottom: 8px;
+
+    font-family: 'Roboto-Medium';
+    font-size: 16px;
+    line-height: 19px;
+    color: #212121;
+`;
+
+export const PostInfo = styled(View)`
+    flex-direction: row;
+    justify-content: space-between;
+`;
+
+export const PostCommentsBtn = styled(Pressable)`
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+`;
+export const MessageCirle = styled(Feather)`
+    transform: scaleX(-1);
+`;
+export const PostCommentsLabel = styled(Text)`
+    font-family: 'Roboto-Regular';
+    font-size: 16px;
+    line-height: 19px;
+    color: #bdbdbd;
+`;
+
+export const PostLocationBtn = styled(Pressable)`
+    flex-direction: row;
+    align-items: center;
+    gap: 3px;
+`;
+export const PostLocationLabel = styled(Text)`
+    font-family: 'Roboto-Regular';
+    font-size: 16px;
+    line-height: 19px;
+    text-decoration-line: underline;
+    color: #212121;
+`;
+
 export function ProfileScreen() {
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -97,12 +157,13 @@ export function ProfileScreen() {
                 collection(db, 'posts'),
                 where('userId', '==', userInfo.userId)
             );
-            const snapshot = await getDocs(q);
-            let newPost = [];
-            snapshot.forEach(doc => {
-                newPost = [...newPost, { id: doc.id, ...doc.data() }];
+            await onSnapshot(q, snapshot => {
+                let newPost = [];
+                snapshot.forEach(doc => {
+                    newPost = [...newPost, { id: doc.id, ...doc.data() }];
+                });
+                setUserPosts(newPost);
             });
-            setUserPosts(newPost);
         } catch (error) {
             console.log(error);
         }
@@ -130,6 +191,22 @@ export function ProfileScreen() {
         navigation.navigate('Login');
     }
 
+    function openComments(photo, postId) {
+        navigation.navigate('CommentsScreen', {
+            postsPhoto: photo,
+            postId,
+        });
+    }
+
+    function openMap(location) {
+        navigation.navigate('MapScreen', {
+            location: {
+                latitude: location.latitude,
+                longitude: location.longitude,
+            },
+        });
+    }
+
     const { pusher, container, bgImage } = styles;
     return (
         <View style={container}>
@@ -150,6 +227,53 @@ export function ProfileScreen() {
                         <Feather name="log-out" size={24} color="#BDBDBD" />
                     </SignOutBtn>
                     <UserName>{userInfo.login}</UserName>
+                    <FlatList
+                        data={userPosts}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => {
+                            return (
+                                <PostContainer>
+                                    <PostPhoto source={{ uri: item.photo }} />
+                                    <PostTitle>{item.title}</PostTitle>
+                                    <PostInfo>
+                                        <PostCommentsBtn
+                                            onPress={() => {
+                                                openComments(
+                                                    item.photo,
+                                                    item.id
+                                                );
+                                            }}
+                                        >
+                                            <MessageCirle
+                                                name="message-circle"
+                                                size={24}
+                                                color="#BDBDBD"
+                                            />
+                                            <PostCommentsLabel>
+                                                {item.numberOfComments
+                                                    ? item.numberOfComments
+                                                    : '0'}
+                                            </PostCommentsLabel>
+                                        </PostCommentsBtn>
+                                        <PostLocationBtn
+                                            onPress={() => {
+                                                openMap(item.location);
+                                            }}
+                                        >
+                                            <Feather
+                                                name="map-pin"
+                                                size={24}
+                                                color="#BDBDBD"
+                                            />
+                                            <PostLocationLabel>
+                                                {item.position}
+                                            </PostLocationLabel>
+                                        </PostLocationBtn>
+                                    </PostInfo>
+                                </PostContainer>
+                            );
+                        }}
+                    />
                 </ProfileContainer>
             </ImageBackground>
         </View>

@@ -111,6 +111,7 @@ export function CreatePostsScreen() {
                 postIsPublish: true,
             },
         });
+        deletePost();
     }
 
     async function uploadPostToServer(post) {

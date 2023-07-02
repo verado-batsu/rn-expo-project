@@ -11,7 +11,13 @@ import {
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import {
+    collection,
+    addDoc,
+    doc,
+    updateDoc,
+    onSnapshot,
+} from 'firebase/firestore';
 import moment from 'moment';
 
 import { db } from '../../../config';
@@ -119,7 +125,7 @@ export function CommentsScreen() {
 
     useEffect(() => {
         getAllComments();
-    }, [comment]);
+    }, []);
 
     async function createComment() {
         try {
@@ -140,14 +146,22 @@ export function CommentsScreen() {
 
     async function getAllComments() {
         try {
-            const snapshot = await getDocs(
-                collection(db, 'posts', postId, 'comments')
+            await onSnapshot(
+                collection(db, 'posts', postId, 'comments'),
+                snapshot => {
+                    let newComments = [];
+                    snapshot.forEach(doc => {
+                        newComments = [
+                            ...newComments,
+                            { id: doc.id, ...doc.data() },
+                        ];
+                    });
+                    setAllComments(newComments);
+                    updateDoc(doc(db, 'posts', postId), {
+                        numberOfComments: newComments.length,
+                    });
+                }
             );
-            let newComments = [];
-            snapshot.forEach(doc => {
-                newComments = [...newComments, { id: doc.id, ...doc.data() }];
-            });
-            setAllComments(newComments);
         } catch (error) {
             console.log(error);
         }
