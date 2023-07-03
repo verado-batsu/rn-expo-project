@@ -79,12 +79,41 @@ export const PostCommentsBtn = styled(Pressable)`
 export const MessageCirle = styled(Feather)`
     transform: scaleX(-1);
 `;
-export const PostCommentsLabel = styled(Text)`
+export const PostCommentsNumber = styled(Text)`
     font-family: 'Roboto-Regular';
     font-size: 16px;
     line-height: 19px;
-    color: #bdbdbd;
+	color: ${(props) => {
+		if (props.numberOfCommets === 0) {
+			return '#bdbdbd'
+		} else {
+			return '#212121'
+		}
+	}};
 `;
+
+// export const LikeBtn = styled(Pressable)`
+//     flex-direction: row;
+//     align-items: center;
+//     gap: 6px;
+// `;
+
+// export const LikeIcon = styled(Feather)`
+// `
+
+// export const PostLikeNumber = styled(Text)`
+//     font-family: 'Roboto-Regular';
+//     font-size: 16px;
+//     line-height: 19px;
+// 	color: ${(props) => {
+// 		if (props.numberOFCommets === 0) {
+// 			return '#bdbdbd'
+// 		} else {
+// 			return '#212121'
+// 		}
+// 	}};
+//     color: #bdbdbd;
+// `;
 
 export const PostLocationBtn = styled(Pressable)`
     flex-direction: row;
