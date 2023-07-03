@@ -90,6 +90,7 @@ export function CreatePostsScreen() {
     }
 
     async function publishPost() {
+        setIsDisableBtn(true);
         const photoUrl = await uploadPhotoToServer(photo.uri);
 
         let currLocation = await Location.getCurrentPositionAsync({});

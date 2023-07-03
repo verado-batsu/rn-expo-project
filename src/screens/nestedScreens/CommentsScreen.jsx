@@ -130,7 +130,7 @@ export function CommentsScreen() {
     async function createComment() {
         try {
             if (comment) {
-                const date = moment().format('LL | h:mm');
+                const date = moment.utc().format();
                 await addDoc(collection(db, 'posts', postId, 'comments'), {
                     comment,
                     avatar,
@@ -189,7 +189,9 @@ export function CommentsScreen() {
                                 currentUser={userId}
                             >
                                 <Comment>{item.comment}</Comment>
-                                <CommentDate>{item.date}</CommentDate>
+                                <CommentDate>
+                                    {moment(item.date).format('LL | H:mm')}
+                                </CommentDate>
                             </CommentBox>
                         </CommentContainer>
                     )}
