@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 
+import FlashMessage from "react-native-flash-message";
 import { useFonts } from 'expo-font';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -22,6 +23,7 @@ export default function App() {
 		<Provider store={store}>
 			<PersistGate loading={null} persistor={persistor}>
 				<Main />
+				<FlashMessage position="top" /> 
 			</PersistGate>
 		</Provider>
 	);

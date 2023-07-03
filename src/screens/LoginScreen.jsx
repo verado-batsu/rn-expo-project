@@ -56,15 +56,7 @@ export function LoginScreen() {
     }
 
     async function logIn() {
-        dispatch(authSignInUser(user));
-
-        navigation.navigate('Home', {
-            screen: 'PostsScreen',
-            params: {
-                screen: 'DefaultPostsScreen',
-                params: { user },
-            },
-        });
+        dispatch(authSignInUser(user, navigation));
     }
 
     const { pusher } = styles;

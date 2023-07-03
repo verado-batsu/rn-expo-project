@@ -6,11 +6,12 @@ import {
 	signOut,
 } from 'firebase/auth';
 
-import { auth } from '../../../config'
-import { authSignInState, authSignOutState } from './authSlice';
-import { uploadPhotoToServer } from '../helpers/uploadPhotoToServer';
 
-export const authSignUpUser = ({email, password, login, avatar}) => async (dispatch, getState) => {
+import { auth } from '../../../config'
+import { authChangeAvatar, authSignInState, authSignOutState } from './authSlice';
+import { uploadPhotoToServer, showErrorMessage } from '../helpers';
+
+export const authSignUpUser = ({email, password, login, avatar}, navigation) => async (dispatch, getState) => {
 	try {
 		const photoUrl = await uploadPhotoToServer(avatar)
 		await createUserWithEmailAndPassword(auth, email, password)
@@ -30,13 +31,13 @@ export const authSignUpUser = ({email, password, login, avatar}) => async (dispa
 			avatar: photoURL,
 			email: userEmail
 		}))
+		navigation.navigate('Home');
 	} catch (error) {
-		console.log(error)
 		console.log(error.message)
 	}
 }
 
-export const authSignInUser = ({email, password}) => async (dispatch, getState) => {
+export const authSignInUser = ({email, password}, navigation) => async (dispatch, getState) => {
 	try {
 		await signInWithEmailAndPassword(auth, email, password)
 
@@ -48,9 +49,11 @@ export const authSignInUser = ({email, password}) => async (dispatch, getState) 
 			avatar: photoURL,
 			email: userEmail
 		}))
+
+		navigation.navigate('Home');
 	} catch (error) {
-		console.log(error)
 		console.log(error.message)
+		showErrorMessage(error.message)
 	}
 }
 
@@ -68,12 +71,18 @@ export const updateUserAvatar = (newAvatar) => async (dispatch, getState) => {
 	try {
 		const photoURL = await uploadPhotoToServer(newAvatar)
 
-		const user = getState().auth;
-		console.log(user)
+		const user = auth.currentUser;
+		if (user === null) {
+			showErrorMessage('Для цієї операції ще раз увійдіть у свій обліковий запис')
+		}
 		
-		await updateProfile({userId: user.userId}, {
+		await updateProfile(user, {
 			photoURL
 		})
+
+		dispatch(authChangeAvatar({
+			avatar: photoURL,
+		}))
 
 	} catch (error) {
 		console.log(error)

@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 
 import { db } from '../../config';
 import { selectUser } from '../redux/selectors';
-import { uploadPhotoToServer } from '../redux/helpers/uploadPhotoToServer';
+import { uploadPhotoToServer } from '../redux/helpers';
 
 import {
     MainContainer,

@@ -85,6 +85,13 @@ export const UserName = styled(Text)`
     letter-spacing: 0.3px;
 `;
 
+export const EmptyPostText = styled(Text)`
+    text-align: center;
+    font-family: 'Roboto-Medium';
+    font-size: 24px;
+    letter-spacing: 0.3px;
+`;
+
 export const PostContainer = styled(View)`
     margin-bottom: 32px;
 `;
@@ -179,7 +186,7 @@ export function ProfileScreen() {
             });
             if (!result.canceled) {
                 setImage(result.assets[0].uri);
-                // dispatch(updateUserAvatar(result.assets[0].uri));
+                dispatch(updateUserAvatar(result.assets[0].uri));
             }
             return;
         }
@@ -227,53 +234,59 @@ export function ProfileScreen() {
                         <Feather name="log-out" size={24} color="#BDBDBD" />
                     </SignOutBtn>
                     <UserName>{userInfo.login}</UserName>
-                    <FlatList
-                        data={userPosts}
-                        keyExtractor={item => item.id}
-                        renderItem={({ item }) => {
-                            return (
-                                <PostContainer>
-                                    <PostPhoto source={{ uri: item.photo }} />
-                                    <PostTitle>{item.title}</PostTitle>
-                                    <PostInfo>
-                                        <PostCommentsBtn
-                                            onPress={() => {
-                                                openComments(
-                                                    item.photo,
-                                                    item.id
-                                                );
-                                            }}
-                                        >
-                                            <MessageCirle
-                                                name="message-circle"
-                                                size={24}
-                                                color="#BDBDBD"
-                                            />
-                                            <PostCommentsLabel>
-                                                {item.numberOfComments
-                                                    ? item.numberOfComments
-                                                    : '0'}
-                                            </PostCommentsLabel>
-                                        </PostCommentsBtn>
-                                        <PostLocationBtn
-                                            onPress={() => {
-                                                openMap(item.location);
-                                            }}
-                                        >
-                                            <Feather
-                                                name="map-pin"
-                                                size={24}
-                                                color="#BDBDBD"
-                                            />
-                                            <PostLocationLabel>
-                                                {item.position}
-                                            </PostLocationLabel>
-                                        </PostLocationBtn>
-                                    </PostInfo>
-                                </PostContainer>
-                            );
-                        }}
-                    />
+                    {userPosts.length === 0 ? (
+                        <EmptyPostText>Ви ще не робили пости :(</EmptyPostText>
+                    ) : (
+                        <FlatList
+                            data={userPosts}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => {
+                                return (
+                                    <PostContainer>
+                                        <PostPhoto
+                                            source={{ uri: item.photo }}
+                                        />
+                                        <PostTitle>{item.title}</PostTitle>
+                                        <PostInfo>
+                                            <PostCommentsBtn
+                                                onPress={() => {
+                                                    openComments(
+                                                        item.photo,
+                                                        item.id
+                                                    );
+                                                }}
+                                            >
+                                                <MessageCirle
+                                                    name="message-circle"
+                                                    size={24}
+                                                    color="#BDBDBD"
+                                                />
+                                                <PostCommentsLabel>
+                                                    {item.numberOfComments
+                                                        ? item.numberOfComments
+                                                        : '0'}
+                                                </PostCommentsLabel>
+                                            </PostCommentsBtn>
+                                            <PostLocationBtn
+                                                onPress={() => {
+                                                    openMap(item.location);
+                                                }}
+                                            >
+                                                <Feather
+                                                    name="map-pin"
+                                                    size={24}
+                                                    color="#BDBDBD"
+                                                />
+                                                <PostLocationLabel>
+                                                    {item.position}
+                                                </PostLocationLabel>
+                                            </PostLocationBtn>
+                                        </PostInfo>
+                                    </PostContainer>
+                                );
+                            }}
+                        />
+                    )}
                 </ProfileContainer>
             </ImageBackground>
         </View>

@@ -2,7 +2,7 @@ import uuid from 'react-native-uuid';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from '../../../config';
 
-export async function uploadPhotoToServer(photo) {
+export default async function uploadPhotoToServer(photo) {
         try {
             const response = await fetch(photo);
             const file = await response.blob();

@@ -20,10 +20,14 @@ const authSlice = createSlice({
 			email: payload.email,
 			isLoggedIn: true
 		}),
-		authSignOutState: () => ({...initialState}),
+		authSignOutState: () => ({ ...initialState }),
+		authChangeAvatar: (state, { payload }) => ({
+			...state,
+			avatar: payload.avatar
+		})
 	}
 })
 
 export const authReducer = authSlice.reducer;
 
-export const { authSignInState, authSignOutState } = authSlice.actions;
+export const { authSignInState, authSignOutState, authChangeAvatar } = authSlice.actions;

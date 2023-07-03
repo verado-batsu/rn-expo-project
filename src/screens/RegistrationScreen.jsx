@@ -67,8 +67,7 @@ export function RegistrationScreen() {
     }
 
     function signUp() {
-        dispatch(authSignUpUser({ ...user, avatar: image }));
-        navigation.navigate('Home');
+        dispatch(authSignUpUser({ ...user, avatar: image }, navigation));
     }
 
     async function pickImage() {
